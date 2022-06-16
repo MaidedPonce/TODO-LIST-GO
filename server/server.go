@@ -6,6 +6,8 @@ import (
 	"log"
 	"net/http"
 
+	db "github.com/MaidedPonce/TODO-LIST-GO/database"
+	"github.com/MaidedPonce/TODO-LIST-GO/repository"
 	"github.com/gorilla/mux"
 )
 
@@ -47,6 +49,11 @@ func NewServer(ctx context.Context, config *Config) (*Broker, error) {
 func (b *Broker) Start(binder func(s Server, r *mux.Router)) {
 	b.router = mux.NewRouter()
 	binder(b, b.router)
+	repo, err := db.NewDBRepository(b.config.DataBaseUrl)
+	if err != nil {
+		log.Fatal(err)
+	}
+	repository.SetRepository(repo)
 	log.Println("Ya se inicio la cosa ajjaj:D", b.Config().Port)
 	if err := http.ListenAndServe(b.config.Port, b.router); err != nil {
 		log.Fatal("No hay server:(", err)

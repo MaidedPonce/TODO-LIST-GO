@@ -8,9 +8,9 @@ import (
 
 type Repository interface {
 	ReadTaskID(ctx context.Context, id string) (*tasks.Task, error)
-	ReadTasks() tasks.List
+	//ReadTasks() tasks.List
 	CreateTask(ctx context.Context, task *tasks.Task) error
-	DeleteTask(id string)
+	//DeleteTask(id string)
 	Close() error
 }
 

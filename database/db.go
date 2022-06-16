@@ -23,13 +23,13 @@ func NewDBRepository(url string) (*PostgresRepository, error) {
 	return &PostgresRepository{db}, nil
 }
 
-func (repo *PostgresRepository) InsertTask(ctx context.Context, task *tasks.Task) error {
+func (repo *PostgresRepository) CreateTask(ctx context.Context, task *tasks.Task) error {
 	_, err := repo.db.ExecContext(ctx, "INSERT INTO tasks (id, text) VALUES ($1, $2)", task.Id, task.Text)
 
 	return err
 }
 
-func (repo *PostgresRepository) GetTaskById(ctx context.Context, id int64) (*tasks.Task, error) {
+func (repo *PostgresRepository) ReadTaskID(ctx context.Context, id string) (*tasks.Task, error) {
 	rows, err := repo.db.QueryContext(ctx, "SELECT id, task FROM tasks WHERE id = $1", id)
 
 	defer func() {
