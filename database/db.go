@@ -39,17 +39,17 @@ func (repo *PostgresRepository) ReadTaskID(ctx context.Context, id string) (*tas
 		}
 	}()
 
-	var t = tasks.Task{}
+	var taskid = tasks.Task{}
 
 	for rows.Next() {
-		if err = rows.Scan(&t.Id, &t.Text); err == nil {
-			return &t, nil
+		if err = rows.Scan(&taskid.Id, &taskid.Text); err == nil {
+			return &taskid, nil
 		}
 	}
 	if err = rows.Err(); err != nil {
 		return nil, err
 	}
-	return &t, nil
+	return &taskid, nil
 }
 
 func (repo *PostgresRepository) ReadTasks(ctx context.Context) ([]*tasks.Task, error) {
@@ -74,6 +74,16 @@ func (repo *PostgresRepository) ReadTasks(ctx context.Context) ([]*tasks.Task, e
 		return nil, err
 	}
 	return alltasks, nil
+}
+
+func (repo *PostgresRepository) UpdateTask(ctx context.Context, task *tasks.Task) error {
+	_, err := repo.db.ExecContext(ctx, "UPDATE tasks SET text = $1 WHERE id = $2", task.Text, task.Id)
+	return err
+}
+
+func (repo *PostgresRepository) DeleteTask(ctx context.Context, id string) error {
+	_, err := repo.db.ExecContext(ctx, "DELETE FROM tasks WHERE id = $1", id)
+	return err
 }
 
 func (repo *PostgresRepository) Close() error {
