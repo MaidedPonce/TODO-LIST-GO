@@ -10,18 +10,18 @@ import (
 	"github.com/segmentio/ksuid"
 )
 
-type TaskReq struct {
+type TaskCreateReq struct {
 	Text string `json:"text"`
 }
 
-type TaskRes struct {
+type TaskCreateRes struct {
 	Id   string `json:"id"`
 	Text string `json:"text"`
 }
 
 func CreateTask(s server.Server) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req = TaskReq{}
+		var req = TaskCreateReq{}
 		err := json.NewDecoder(r.Body).Decode(&req)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
@@ -38,12 +38,13 @@ func CreateTask(s server.Server) http.HandlerFunc {
 		}
 
 		err = repository.CreateTask(r.Context(), &task)
+
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(TaskRes{
+		json.NewEncoder(w).Encode(TaskCreateRes{
 			Id:   task.Id,
 			Text: task.Text,
 		})

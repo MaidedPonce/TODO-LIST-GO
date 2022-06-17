@@ -7,8 +7,8 @@ import (
 )
 
 type Repository interface {
-	ReadTaskID(ctx context.Context, id string) (*tasks.Task, error)
-	//ReadTasks() tasks.List
+	//ReadTaskID(ctx context.Context, id string) (*tasks.Task, error)
+	ReadTasks(ctx context.Context) ([]*tasks.Task, error)
 	CreateTask(ctx context.Context, task *tasks.Task) error
 	//DeleteTask(id string)
 	Close() error
@@ -20,8 +20,12 @@ func SetRepository(repository Repository) {
 	implementation = repository
 }
 
-func ReadTaskID(ctx context.Context, id string) (*tasks.Task, error) {
+/* func ReadTaskID(ctx context.Context, id string) (*tasks.Task, error) {
 	return implementation.ReadTaskID(ctx, id)
+}
+*/
+func ReadTasks(ctx context.Context) ([]*tasks.Task, error) {
+	return implementation.ReadTasks(ctx)
 }
 
 func CreateTask(ctx context.Context, task *tasks.Task) error {

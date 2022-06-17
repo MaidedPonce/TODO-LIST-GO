@@ -17,7 +17,7 @@ func HomeHandler(s server.Server) http.HandlerFunc {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(HomeResponse{
-			Message: "Holi:D",
+			Message: "Holi:D. Bienvenida seas",
 			Status:  true,
 		})
 	}

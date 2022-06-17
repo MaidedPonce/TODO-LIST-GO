@@ -37,4 +37,5 @@ func main() {
 func BindRputes(s server.Server, r *mux.Router) {
 	r.HandleFunc("/", controllers.HomeHandler(s)).Methods(http.MethodGet)
 	r.HandleFunc("/newtask", controllers.CreateTask(s)).Methods(http.MethodPost)
+	r.HandleFunc("/tasks", controllers.ReadTasks(s)).Methods(http.MethodGet)
 }

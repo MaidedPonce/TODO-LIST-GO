@@ -52,6 +52,30 @@ func (repo *PostgresRepository) ReadTaskID(ctx context.Context, id string) (*tas
 	return &t, nil
 }
 
+func (repo *PostgresRepository) ReadTasks(ctx context.Context) ([]*tasks.Task, error) {
+	rows, err := repo.db.QueryContext(ctx, "SELECT * FROM tasks")
+
+	defer func() {
+		err = rows.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}()
+
+	var alltasks []*tasks.Task
+
+	for rows.Next() {
+		var t = tasks.Task{}
+		if err = rows.Scan(&t.Id, &t.Text); err == nil {
+			alltasks = append(alltasks, &t)
+		}
+	}
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+	return alltasks, nil
+}
+
 func (repo *PostgresRepository) Close() error {
 	return repo.db.Close()
 }
